@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hackett &amp; Hackett — Chauffeur, Close Protection &amp; Private Travel</title>
 <meta name="description" content="London's discreet chauffeur, close protection and private travel house. Since 2009, across 100+ countries. Arrive as you mean to continue." />
+<!-- This concept carries a real company's name and contact details. It must never be
+     indexed, outrank, or be mistaken for their official site. See also /robots.txt. -->
+<meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#08090C" />
 <!-- set theme before paint: saved choice → OS preference → dark default -->
 <script>(function(){try{var s=localStorage.getItem('hh-theme');var t=s||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#F1EEE7':'#08090C');}catch(e){}})();</script>
@@ -338,6 +341,20 @@
   .reveal[data-d="2"] { transition-delay: .16s; }
   .reveal[data-d="3"] { transition-delay: .24s; }
   .reveal[data-d="4"] { transition-delay: .32s; }
+
+  /* concept notice — this build wears a real company's branding and real contact
+     details, so it states plainly what it is and points at the genuine site.
+     Sits below the toast (z 90) and clears the bottom-centre where the toast lands. */
+  .concept { position: fixed; left: 16px; bottom: 16px; z-index: 80; display: flex; align-items: flex-start; gap: .6rem; max-width: min(390px, calc(100vw - 32px)); padding: .65rem .65rem .65rem .9rem; border-radius: 12px; border: 1px solid var(--hair-2); background: var(--menu-bg); backdrop-filter: blur(12px) saturate(140%); box-shadow: 0 18px 44px -18px rgba(0,0,0,.75); font-size: .73rem; line-height: 1.5; color: var(--fog); }
+  .concept b { color: var(--ivory); font-weight: 600; }
+  .concept a { color: var(--brass); border-bottom: 1px solid var(--hair-2); }
+  .concept a:hover { border-bottom-color: var(--brass); }
+  .concept__dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--brass); margin-top: .45rem; }
+  .concept__x { flex: none; width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--hair); color: var(--ash); display: grid; place-items: center; transition: color .2s, border-color .2s; }
+  .concept__x:hover { color: var(--ivory); border-color: var(--hair-2); }
+  .concept__x svg { width: 11px; height: 11px; }
+  .concept[hidden] { display: none; }
+  @media (max-width: 560px) { .concept { left: 10px; right: 10px; bottom: 10px; max-width: none; } }
 
   /* toast */
   .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 140%); z-index: 90; background: var(--slate); border: 1px solid var(--brass); color: var(--ivory); padding: .85rem 1.2rem; border-radius: 999px; font-size: .9rem; box-shadow: 0 20px 50px -12px rgba(0,0,0,.7); transition: transform .5s cubic-bezier(.2,.7,.2,1); display: flex; align-items: center; gap: .6rem; }
@@ -918,9 +935,17 @@
   </div>
 </footer>
 
+<aside class="concept" id="conceptNote">
+  <span class="concept__dot" aria-hidden="true"></span>
+  <span><b>Concept redesign.</b> An independent study for interview purposes — not the official Hackett &amp; Hackett site, and not affiliated with them. The real one is <a href="https://hackettandhackett.co.uk/" rel="noopener noreferrer">hackettandhackett.co.uk</a>.</span>
+  <button class="concept__x" id="conceptX" type="button" aria-label="Dismiss this notice">
+    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11" stroke-linecap="round"/></svg>
+  </button>
+</aside>
+
 <div class="toast" id="toast" role="status" aria-live="polite">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <span id="toastMsg">Quote requested — we'll be in touch shortly.</span>
+  <span id="toastMsg">Demo only — no quote was sent.</span>
 </div>
 
 <script>
@@ -948,6 +973,16 @@
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('hh-theme', next); } catch (e) {}
     syncTheme();
+  });
+
+  /* concept notice: dismissible per session, so it re-states itself to every new
+     visitor rather than being permanently silenced by one click */
+  var note = document.getElementById('conceptNote');
+  var noteX = document.getElementById('conceptX');
+  try { if (sessionStorage.getItem('hh-concept-seen')) note.hidden = true; } catch (e) {}
+  if (noteX) noteX.addEventListener('click', function () {
+    note.hidden = true;
+    try { sessionStorage.setItem('hh-concept-seen', '1'); } catch (e) {}
   });
 
   /* mobile menu */
@@ -1049,7 +1084,7 @@
     e.preventDefault();
     var from = document.getElementById('from').value.trim();
     var to = document.getElementById('to').value.trim();
-    toastMsg.textContent = (from && to) ? ('Quote requested: ' + from + ' → ' + to + '. We’ll be in touch shortly.') : 'Quote requested — we’ll be in touch shortly.';
+    toastMsg.textContent = (from && to) ? ('Demo: ' + from + ' → ' + to + ' — no quote was actually sent.') : 'Demo only — no quote was sent.';
     toast.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 4200);
