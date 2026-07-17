@@ -1,0 +1,5 @@
+# tooling / OS noise — the site itself is index.html + assets/
+.playwright-mcp/
+Thumbs.db
+desktop.ini
+.DS_Store
